@@ -454,6 +454,36 @@ isErrorLike({ name: 'Error!', message: 'This is an error' }) // true
 isErrorLike({}) // false
 ```
 
+### `throwError`
+
+Throw an error from an expression or arrow function.
+
+```js
+import { throwError } from '@analytics/type-utils'
+
+const fail = () => throwError('Something went wrong')
+```
+
+### `throwIf`
+
+Throw an error when a condition is truthy.
+
+```js
+import { throwIf } from '@analytics/type-utils'
+
+throwIf(!value, 'Value is required')
+```
+
+### `toError`
+
+Convert a value into an `Error`. Existing errors are returned unchanged.
+
+```js
+import { toError } from '@analytics/type-utils'
+
+const error = toError('Something went wrong')
+```
+
 ### `isTypeError`
 
 Check if value is a `TypeError`.

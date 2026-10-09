@@ -27,6 +27,9 @@ const {
   isBoolean,
   isError,
   isErrorLike,
+  toError,
+  throwError,
+  throwIf,
   isTypeError,
   isSyntaxError,
   isRegex,
@@ -295,6 +298,28 @@ test('isErrorLike', () => {
   errorLike.forEach((value) => {
     assert.is(isErrorLike(value), true, value)
   })
+})
+
+test('toError', () => {
+  const original = new Error('original')
+  const namedError = toError({ name: 'CustomError', message: 'custom message' })
+
+  assert.is(toError('message').message, 'message')
+  assert.is(toError(original), original)
+  assert.is(namedError.name, 'CustomError')
+  assert.is(namedError.message, 'custom message')
+  assert.is(toError(null).message, 'null')
+})
+
+test('throwError', () => {
+  assert.throws(() => throwError('failure'), /failure/)
+  assert.throws(() => throwError({ name: 'CustomError', message: 'failure' }), /failure/)
+})
+
+test('throwIf', () => {
+  assert.not.throws(() => throwIf(false, 'failure'))
+  assert.not.throws(() => throwIf(0, 'failure'))
+  assert.throws(() => throwIf(true, 'failure'), /failure/)
 })
 
 test('isTypeError', () => {
