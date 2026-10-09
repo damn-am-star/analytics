@@ -442,6 +442,44 @@ export function isErrorLike(obj) {
   return isObjectLike(obj) && isString(obj.message) && isString(obj.name)
 }
 
+/**
+ * @typedef {string | Error | {name: string, message: string}} ErrorLike
+ */
+
+/**
+ * Convert a value into an Error.
+ * @param {ErrorLike} msg
+ * @returns {Error}
+ */
+export function toError(msg) {
+  if (msg instanceof Error) return msg
+  if (isErrorLike(msg)) {
+    const error = new Error(msg.message)
+    error.name = msg.name
+    return error
+  }
+  return new Error(String(msg))
+}
+
+/**
+ * Throw an error, for use in expressions and arrow functions.
+ * @param {ErrorLike} msg
+ * @returns {never}
+ */
+export function throwError(msg) {
+  throw toError(msg)
+}
+
+/**
+ * Throw an error if the condition is truthy.
+ * @param {unknown} condition
+ * @param {ErrorLike} msg
+ * @returns {void}
+ */
+export function throwIf(condition, msg) {
+  if (condition) throwError(msg)
+}
+
 function errorType(ErrKind, value) {
   if (typeof value !== 'object' || isNull(value)) return false
   // Check for `TypeError` objects from the same realm (same Node.js `vm` or same `Window` object)...
